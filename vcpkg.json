@@ -1,0 +1,7 @@
+{
+  "dependencies": [
+    "bext-di",
+    "nlohmann-json",
+    "magic-enum"
+  ]
+}
