@@ -1,0 +1,108 @@
+# This workflow builds the project using CMake and vcpkg.
+name: cmake-vcpkg-build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: .
+
+  # Configuration type to build.
+  # You can convert this to a build matrix if you need coverage of multiple configuration types.
+  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+  BUILD_CONFIGURATION: Release
+
+permissions:
+  contents: read
+
+jobs:
+  job:
+    name: ${{ matrix.os }}-${{ github.workflow }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        include:
+          - os: windows-latest
+            triplet: x64-windows
+          - os: ubuntu-latest
+            triplet: x64-linux
+
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Install Dependencies (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt update
+        sudo apt install -y cmake g++ ninja-build git libx11-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev autoconf libtool
+      shell: bash
+
+    - name: Clean up workspace (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        # Remove any existing build directory
+        if [ -d "build" ]; then
+          rm -rf build
+        fi
+      shell: bash
+
+    - name: Clean up workspace (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        # Remove any existing build directory
+        if (Test-Path "build") {
+          Remove-Item -Recurse -Force "build"
+        }
+        # Try to clean up the cache the previous runner
+        cd ${{ github.workspace }}/vcpkg
+        git clean -fdx
+        git reset --hard HEAD
+      shell: pwsh
+
+    - name: Set up the cache for vcpkg (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/vcpkg
+          ${{ github.workspace }}/vcpkg
+        key: vcpkg-${{ runner.os }}-${{ hashFiles('**/vcpkg.json') }}
+        restore-keys: |
+            vcpkg-${{ runner.os }}-
+
+    - name: Set up the cache for VCPKG (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: actions/cache@v4
+      with:
+        path: |
+          C:\Users\runneradmin\AppData\Local\vcpkg
+          ${{ github.workspace }}/vcpkg
+        key: vcpkg-${{ runner.os }}-${{ hashFiles('**/vcpkg.json') }}
+        restore-keys: |
+            vcpkg-${{ runner.os }}-
+
+    - name: Build with CMake Presets (Linux)
+      if: matrix.os == 'ubuntu-latest'
+      run: cmake --workflow --preset x64-release
+
+    - name: Build with CMake Presets (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        $vsInstallPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise"
+        $devShellModule = "$vsInstallPath\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
+        Import-Module $devShellModule
+        Enter-VsDevShell -VsInstallPath $vsInstallPath -Arch amd64 -SkipAutomaticLocation
+        cmake --workflow --preset x64-release
+      shell: pwsh
