@@ -2,6 +2,7 @@
   "dependencies": [
     "bext-di",
     "nlohmann-json",
-    "magic-enum"
+    "magic-enum",
+    "stduuid"
   ]
 }
