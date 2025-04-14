@@ -13,7 +13,7 @@ namespace Hardware
     {
         for (int i = 0; i < magnetometers_; ++i)
         {
-            algorithms_.emplace_back(/* provide necessary constructor arguments here */);
+            algorithms_.emplace_back(i);
         }
         thread_ = std::thread([this]()
                                 { this->run(); });
@@ -57,8 +57,12 @@ namespace Hardware
             for (int i = 0; i < magnetometers_; ++i)
             {
                 std::vector<float> pose;
-                algorithms_[i].process(packet.magnetometers[i], pose, interval_ms_);
-                packet.poses.push_back(pose);
+                // process asynchronously
+                algorithms_[i].processSampleAsync(packet.magnetometers[i], [this, &packet, i](Models::Pose pose)
+                {
+                    std::unique_lock<std::mutex> lock(clients_mutex_);
+                    packet.poses.push_back({pose.x, pose.y, pose.z, pose.qx, pose.qy, pose.qz, pose.qw});
+                });
             }
             // distribute to clients
             std::unique_lock<std::mutex> lock(clients_mutex_);
