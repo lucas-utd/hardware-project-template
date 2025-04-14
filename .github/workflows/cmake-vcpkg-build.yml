@@ -46,7 +46,8 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         sudo apt update
-        sudo apt install -y cmake g++ ninja-build git libx11-dev libxrandr-dev libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev autoconf libtool
+        sudo apt install -y cmake g++ ninja-build git libx11-dev libxrandr-dev \
+            libxcursor-dev libxi-dev libudev-dev libgl1-mesa-dev autoconf libtool
       shell: bash
 
     - name: Clean up workspace (Linux)
