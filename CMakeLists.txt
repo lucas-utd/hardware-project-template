@@ -14,7 +14,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Find and include the SFML library
 find_path(BEXT_DI_INCLUDE_DIRS "boost/di.hpp")
-if (BEXT_DI_INCLUDE_DIRS)
+if (DEFINED BEXT_DI_INCLUDE_DIRS)
     include_directories(${BEXT_DI_INCLUDE_DIRS})
 else()
     message(FATAL_ERROR "bext-di not found")
@@ -22,7 +22,7 @@ endif()
 
 # Find the nlohmann/json library
 find_package(nlohmann_json CONFIG REQUIRED)
-if (nlohmann_json_FOUND)
+if (DEFINED nlohmann_json_FOUND)
     include_directories(${nlohmann_json_INCLUDE_DIRS})
 else()
     message(FATAL_ERROR "nlohmann/json not found")
@@ -30,10 +30,18 @@ endif()
 
 # Find and include the magic_enum library
 find_package(magic_enum CONFIG REQUIRED)
-if (magic_enum_FOUND)
+if (DEFINED magic_enum_FOUND)
     include_directories(${magic_enum_INCLUDE_DIRS})
 else()
     message(FATAL_ERROR "magic_enum not found")
+endif()
+    
+# Find and include the stduuid library
+find_package(stduuid CONFIG REQUIRED)
+if (DEFINED stduuid_FOUND)
+    include_directories(${stduuid_INCLUDE_DIRS})
+else()
+    message(FATAL_ERROR "stduuid not found")
 endif()
 
 # Add the source files
