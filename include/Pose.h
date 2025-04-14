@@ -2,8 +2,8 @@
 
 namespace Models
 {
-    struct SensorSample
+    struct Pose
     {
-        float x, y, z;
+        float x, y, z, qx, qy, qz, qw;
     };
 } // namespace Models
