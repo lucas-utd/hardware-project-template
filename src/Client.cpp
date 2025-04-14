@@ -37,7 +37,7 @@ namespace Consumer
                 auto packet = queue_.front();
                 queue_.pop();
                 lock.unlock();
-                std::cout << "Client " << id_ << " received sample from " << packet.uuid << "\n";
+                std::printf("Client %s received sample from %s\n", id_.c_str(), packet.uuid.c_str());
                 lock.lock();
             }
         }
