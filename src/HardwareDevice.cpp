@@ -9,7 +9,7 @@ namespace Hardware
         , accelerometers_(accelerometers)
         , gyroscopes_(gyroscopes)
         , interval_ms_(interval_ms)
-        , stop_(false)
+        , isStop_(false)
     {
         for (int i = 0; i < magnetometers_; ++i)
         {
@@ -21,7 +21,7 @@ namespace Hardware
 
     HardwareDevice::~HardwareDevice()
     {
-        stop_ = true;
+        isStop_ = true;
         if (thread_.joinable())
             thread_.join();
     }
@@ -41,7 +41,7 @@ namespace Hardware
 
     void HardwareDevice::run()
     {
-        while (!stop_)
+        while (!isStop_)
         {
             Models::SamplePacket packet;
             packet.uuid = uuid_;

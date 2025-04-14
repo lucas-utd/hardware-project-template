@@ -31,7 +31,7 @@ namespace Consumer
         std::queue<Models::SamplePacket> queue_;
         std::mutex mutex_;
         std::condition_variable cv_;
-        std::atomic<bool> stop_;
+        std::atomic<bool> isStop_;
     };
 } // namespace Consumer
 

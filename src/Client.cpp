@@ -4,7 +4,7 @@ namespace Consumer
 {
     Client::Client(std::string id)
     : id_(id)
-    , stop_(false)
+    , isStop_(false)
     {
         consumer_ = std::thread([this]()
                                 { this->consume(); });
@@ -12,7 +12,7 @@ namespace Consumer
 
     Client::~Client()
     {
-        stop_ = true;
+        isStop_ = true;
         cv_.notify_all();
         if (consumer_.joinable())
             consumer_.join();
@@ -27,11 +27,11 @@ namespace Consumer
 
     void Client::consume()
     {
-        while (!stop_)
+        while (!isStop_)
         {
             std::unique_lock<std::mutex> lock(mutex_);
             cv_.wait(lock, [&]()
-                        { return !queue_.empty() || stop_; });
+                        { return !queue_.empty() || isStop_; });
             while (!queue_.empty())
             {
                 auto packet = queue_.front();

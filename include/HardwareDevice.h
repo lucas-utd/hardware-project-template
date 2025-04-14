@@ -28,7 +28,7 @@ namespace Hardware
         int interval_ms_;
         std::vector<Algo::AlgorithmInstance> algorithms_;
         std::thread thread_;
-        std::atomic<bool> stop_;
+        std::atomic<bool> isStop_;
         std::vector<Consumer::Client *> clients_;
         std::mutex clients_mutex_;
     };
