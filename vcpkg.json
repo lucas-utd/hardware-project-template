@@ -3,6 +3,7 @@
     "bext-di",
     "nlohmann-json",
     "magic-enum",
-    "stduuid"
+    "stduuid",
+    "gtest"
   ]
 }

@@ -58,7 +58,7 @@ target_include_directories(HardwareProject PRIVATE
 )
 
 # Set the compiler flags
-if (MSVC)
+if (DEFINED MSVC)
     target_compile_options(HardwareProject PRIVATE
         /W4
         /permissive-
@@ -86,3 +86,20 @@ set_target_properties(HardwareProject PROPERTIES
     CXX_STANDARD_REQUIRED YES  # Require the specified C++ standard
     CXX_EXTENSIONS NO  # Disable compiler-specific extensions
 )
+
+# Enable testing
+enable_testing()
+
+# Add test executable
+add_executable(MyTests tests/test_main.cpp)
+
+# Link with GTest
+find_package(GTest CONFIG REQUIRED)
+if (NOT GTest_FOUND)
+    message(FATAL_ERROR "GTest not found")
+endif()
+target_link_libraries(MyTests PRIVATE GTest::gtest GTest::gtest_main)
+
+# Discover tests
+include(GoogleTest)
+gtest_discover_tests(MyTests)
