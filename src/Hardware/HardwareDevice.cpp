@@ -43,8 +43,7 @@ namespace Hardware
     {
         while (!isStop_)
         {
-            Models::SamplePacket packet;
-            packet.uuid = uuid_;
+            Models::SamplePacket packet {uuid_};
             packet.timestamp = std::chrono::steady_clock::now();
             // generate samples
             for (int i = 0; i < magnetometers_; ++i)

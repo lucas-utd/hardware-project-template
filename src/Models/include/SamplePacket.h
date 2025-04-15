@@ -10,6 +10,12 @@ namespace Models
 {
     struct SamplePacket
     {
+        // Constructor
+        SamplePacket(const std::string& uuid);
+
+        // Destructor
+        ~SamplePacket();
+
         std::string uuid;
         std::chrono::steady_clock::time_point timestamp;
         std::vector<SensorSample> magnetometers;
