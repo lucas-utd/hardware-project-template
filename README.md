@@ -29,7 +29,7 @@ Ensure you have the following installed:
 ```PowerShell
 # Run those commands in Developer PowerShell for VS 2022
 git clone --recurse-submodules -j8 https://github.com/lucas-utd/hardware-project-template.git
-cd plane-game
+cd hardware-project-template
 
 # Configure and build
 cmake --workflow --preset x64-release
@@ -38,7 +38,7 @@ cmake --workflow --preset x64-release
 ### 🔹 Linux (GCC + vcpkg)  
 ```sh
 git clone --recurse-submodules -j8 https://github.com/lucas-utd/hardware-project-template.git
-cd plane-game
+cd hardware-project-template
 
 # Configure and build
 cmake --workflow --preset x64-release
