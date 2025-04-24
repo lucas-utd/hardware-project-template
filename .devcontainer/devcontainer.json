@@ -1,8 +1,15 @@
 {
-  "name": "Modern CMake for C++ Development Container",
-  "dockerFile": "Dockerfile",
+  "name": "Custome C++ Development Container",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
   "customizations": {
     "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools-theme"
+      ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
         "terminal.integrated.profiles.linux": {
@@ -11,13 +18,8 @@
             "icon": "terminal-bash"
           }
         }
-      },
-      "extensions": [
-        "ms-vscode.cpptools",
-        "ms-vscode.cmake-tools",
-        "ms-vscode.cpptools-theme"
-      ]
+      }
     }
   },
-  "remoteUser": "devuser"
+  "remoteUser": "vscode"
 }
